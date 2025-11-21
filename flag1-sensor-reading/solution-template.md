@@ -1,9 +1,9 @@
 # Flag 1 Solution: Sensor Reading
 # Flag 1 解决方案：传感器读取
 
-**Student Name | 学生姓名**: _________________
+**Student Name | 学生姓名**: Bo Chen
 
-**Date Completed | 完成日期**: _________________
+**Date Completed | 完成日期**: 11.21.2025
 
 ---
 
@@ -11,9 +11,9 @@
 
 ### Which sensor did you choose? | 你选择了哪个传感器？
 
-**Sensor Name | 传感器名称**: 
+**Sensor Name | 传感器名称**: Temperature Sensor LM35
 
-**Sensor Type | 传感器类型**: ☐ Digital (数字) ☐ Analog (模拟)
+**Sensor Type | 传感器类型**: ☐ Analog (模拟)
 
 ---
 
@@ -21,7 +21,7 @@
 
 *Describe what the sensor detects or measures*  
 *描述传感器检测或测量什么*
-
+Temperature
 
 
 
@@ -35,15 +35,12 @@ Fill in how you connected your sensor:
 
 填写你如何连接传感器：
 
-| Sensor Pin | Arduino Pin | 传感器引脚 | Arduino引脚 |
-|------------|-------------|-----------|-------------|
-| VCC | | VCC | |
-| GND | | GND | |
-| Signal/OUT | | 信号/OUT | |
+Sensor VCC  →  Arduino 5V
+Sensor GND  →  Arduino GND
+Sensor OUT  →  Arduino Analog Pin (e.g., A0)
 
 **Additional components used | 使用的额外组件**:
-- [ ] Resistor (value: _______Ω)
-- [ ] Capacitor
+
 - [ ] None / No additional components
 
 ---
@@ -57,7 +54,7 @@ Fill in how you connected your sensor:
 
 *Or describe your wiring setup in words:*  
 *或用文字描述你的接线设置：*
-
+A temperature sensor is wired to a buzzer.
 
 
 
@@ -74,6 +71,52 @@ Fill in how you connected your sensor:
 // Paste your code here
 // 在此粘贴代码
 
+// Project – Temperature Alarm  
+float sinVal;            // Variable to store sine function value  
+int toneVal;             // Variable to store tone frequency  
+unsigned long tepTimer;  // Timer for periodic temperature output  
+  
+void setup(){   
+    pinMode(8, OUTPUT);  // Set pin 8 as OUTPUT for buzzer  
+    Serial.begin(9600);  // Start serial communication at 9600 bps  
+}  
+  
+void loop(){   
+    int val;          // Variable to store the value read from LM35  
+double data;  
+// Variable to store the converted temperature value  
+val = analogRead(0);   
+// Read the value from analog pin 0 connected to LM35  
+data = (double) val * (5.0/10.24);  
+// Convert voltage to temperature  
+       
+if(data > 27){        
+// If the temperature is greater than 27, sound the buzzer  
+          for(int x = 0; x < 180; x++){  
+            // Convert angle for sine function to radians  
+            sinVal = (sin(x * (3.1412/180)));  
+            // Generate tone frequency using sine function value  
+            toneVal = 2000 + (int(sinVal * 1000));  
+            // Play tone on pin 8  
+            tone(8, toneVal);  
+            delay(2);   
+     }     
+} else {    
+// If the temperature is less than 27, stop the buzzer  
+           noTone(8);          // Stop the buzzer  
+    }  
+       
+if(millis() - tepTimer > 500){     
+// Every 500ms, print temperature to serial port  
+             tepTimer = millis();  
+             Serial.print("temperature: ");     
+// Print "temperature" to serial port  
+             Serial.print(data);               
+// Print temperature value to serial port  
+             Serial.println("C");              
+// Print temperature unit to serial port  
+       }   
+}
 
 
 
@@ -90,20 +133,22 @@ Fill in how you connected your sensor:
 
 **Setup Section | 设置部分**:
 
-
+Measures temperature.
 
 
 **Loop Section | 循环部分**:
 
+Reads the analog value from LM35 and converts it into a temperature.
 
+Every 500 ms, prints the current temperature to the Serial Monitor.
 
 
 **Key Functions Used | 使用的关键函数**:
-- [ ] `digitalRead()`
+
 - [ ] `analogRead()`
 - [ ] `Serial.begin()`
 - [ ] `Serial.print()` / `Serial.println()`
-- [ ] Other: __________
+
 
 ---
 
@@ -114,7 +159,7 @@ Fill in how you connected your sensor:
 *Take a screenshot of your Serial Monitor showing sensor readings*  
 *截取显示传感器读数的串口监视器截图*
 
-![Serial Monitor Screenshot](./serial-output.png)
+![TEM-35](image.png)
 
 ---
 
@@ -122,16 +167,15 @@ Fill in how you connected your sensor:
 
 **What happened when you tested your sensor?**  
 **测试传感器时发生了什么？**
-
+There were reads of temperature
 
 
 
 **What range of values did you see?**  
 **你看到的值范围是多少？**
 
-Minimum value | 最小值: _______  
-Maximum value | 最大值: _______
-
+Minimum value | 最小值: 24.90C  
+Maximum value | 最大值: 25.39C
 ---
 
 ### Testing Process | 测试过程
@@ -139,8 +183,7 @@ Maximum value | 最大值: _______
 **How did you test your sensor?**  
 **你如何测试传感器？**
 
-*For example: covered photoresistor with hand, pressed button multiple times, etc.*  
-*例如：用手遮住光敏电阻、多次按按钮等*
+Didn't do much stuff.
 
 
 
@@ -151,7 +194,7 @@ Maximum value | 最大值: _______
 
 ### What Worked Well | 什么做得好
 
-
+The connection.
 
 
 ---
@@ -160,8 +203,8 @@ Maximum value | 最大值: _______
 
 **Did you encounter any problems? How did you solve them?**  
 **遇到任何问题了吗？你如何解决的？**
-
-
+The wiring was opposite.
+I rewired it.
 
 
 ---
@@ -170,7 +213,7 @@ Maximum value | 最大值: _______
 
 **What new things did you learn from this challenge?**  
 **从这个挑战中你学到了什么新东西？**
-
+Wiring using arduino.
 
 
 
@@ -178,7 +221,7 @@ Maximum value | 最大值: _______
 
 ### How Long Did This Take? | 这花了多长时间？
 
-**Estimated time spent | 估计花费时间**: _______ minutes (分钟)
+**Estimated time spent | 估计花费时间**: 10 minutes (分钟)
 
 ---
 
@@ -203,7 +246,7 @@ Check off these items before submitting:
 **准备进入Flag 2了吗？**
 
 ☐ Yes, let's go! (是的，走吧！)  
-☐ I want to try another sensor first (我想先试试另一个传感器)
+
 
 ---
 
@@ -222,7 +265,7 @@ You now understand how to:
 
 ---
 
-**Date Submitted | 提交日期**: _________________
+**Date Submitted | 提交日期**: 11.21.2025
 
 **Instructor Feedback | 讲师反馈**:
 
